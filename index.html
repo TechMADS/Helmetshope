@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Loaded — Ride Gear Pondicherry</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   RESET & ROOT
+══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  /* Per-page theme colors */
+  --home-bg:#FFF5E1;
+  --home-accent:#FF4D00;
+  --home-accent2:#FFC700;
+  --home-text:#1A0A00;
+
+  --shop-bg:#E8F4FF;
+  --shop-accent:#0057FF;
+  --shop-accent2:#00D4FF;
+  --shop-text:#000C2E;
+
+  --about-bg:#F0FFE8;
+  --about-accent:#00A550;
+  --about-accent2:#AAFF00;
+  --about-text:#001A0A;
+
+  --contact-bg:#FFF0F8;
+  --contact-accent:#E0007A;
+  --contact-accent2:#FF6EC7;
+  --contact-text:#1A0010;
+
+  /* Active page theme (JS switches these) */
+  --bg: #FFF5E1;
+  --A1: #FF4D00;
+  --A2: #FFC700;
+  --TX: #1A0A00;
+
+  --font-display:'Poppins',sans-serif;
+  --font-ui:'Inter',sans-serif;
+  --font-body:'Inter',sans-serif;
+
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 8px 40px rgba(0,0,0,.13);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.18);
+}
+
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--TX);font-family:var(--font-body);overflow-x:hidden;transition:background .5s ease,color .4s ease;cursor:none}
+*{cursor:none}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block;object-fit:cover}
+ul{list-style:none}
+button{font-family:inherit;cursor:none}
+
+/* ══ SCROLLBAR ══ */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--A1);border-radius:10px}
+
+/* ══ CURSOR ══ */
+#cursor{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--A1);pointer-events:none;z-index:9999;transform:translate(-50%,-50%) scale(1);transition:transform .12s,background .3s,width .2s,height .2s;mix-blend-mode:multiply}
+#cursor-trail{position:fixed;width:40px;height:40px;border-radius:50%;border:2px solid var(--A1);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .18s ease,top .18s ease,border-color .3s,transform .2s}
+.cursor-grow #cursor{transform:translate(-50%,-50%) scale(3);opacity:.5}
+.cursor-grow #cursor-trail{transform:translate(-50%,-50%) scale(1.5)}
+
+/* ══════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════ */
+#loader{position:fixed;inset:0;background:var(--A1);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:clip-path .9s cubic-bezier(.77,0,.175,1)}
+#loader.hide{clip-path:circle(0% at 50% 50%)}
+.loader-word{font-family:var(--font-display);font-size:clamp(3rem,12vw,7rem);color:#fff;letter-spacing:3px;animation:bounce .6s infinite alternate}
+.loader-word span{color:var(--A2)}
+.loader-dots{display:flex;gap:10px}
+.loader-dots div{width:12px;height:12px;border-radius:50%;background:#fff;animation:dotPop .8s infinite}
+.loader-dots div:nth-child(2){animation-delay:.15s}
+.loader-dots div:nth-child(3){animation-delay:.3s}
+@keyframes bounce{to{transform:translateY(-10px)}}
+@keyframes dotPop{0%,80%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1);opacity:1}}
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:72px;transition:all .4s}
+nav.scrolled{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);box-shadow:0 2px 30px rgba(0,0,0,.08)}
+.nav-logo{font-family:var(--font-display);font-size:1.7rem;color:var(--TX);letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.nav-logo .logo-dot{width:10px;height:10px;background:var(--A1);border-radius:50%;display:inline-block;animation:logoPulse 1.4s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+.nav-links{display:flex;gap:0}
+.nav-link{font-family:var(--font-ui);font-size:.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:.6rem 1.2rem;border-radius:30px;color:var(--TX);transition:all .25s;position:relative}
+.nav-link:hover,.nav-link.active{background:var(--A1);color:#fff}
+.nav-actions{display:flex;gap:.5rem;align-items:center}
+.nav-btn{width:42px;height:42px;border-radius:50%;border:2px solid rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;transition:all .3s;background:transparent;position:relative}
+.nav-btn:hover{background:var(--A1);border-color:var(--A1)}
+.nav-btn:hover svg{stroke:#fff}
+.nav-btn svg{width:18px;height:18px;stroke:var(--TX);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+.cart-badge{position:absolute;top:-4px;right:-4px;background:var(--A1);color:#fff;font-size:.55rem;font-weight:900;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px}
+.hamburger span{display:block;width:24px;height:2.5px;background:var(--TX);border-radius:3px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+
+/* MOBILE MENU */
+.mobile-menu{position:fixed;inset:0;background:var(--A1);z-index:498;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transform:translateX(-100%);transition:transform .45s cubic-bezier(.77,0,.175,1)}
+.mobile-menu.open{transform:translateX(0)}
+.mobile-menu a{font-family:var(--font-display);font-size:3rem;color:#fff;letter-spacing:2px;transition:color .2s}
+.mobile-menu a:hover{color:var(--A2)}
+
+/* ══════════════════════════════════════════
+   PAGE SYSTEM
+══════════════════════════════════════════ */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ══════════════════════════════════════════
+   ██ HOME PAGE
+══════════════════════════════════════════ */
+/* HERO */
+.hero{min-height:100vh;padding:100px 5vw 60px;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-10%;top:-10%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,var(--A2) 0%,transparent 70%);opacity:.25;pointer-events:none;animation:blobFloat 8s ease-in-out infinite}
+.hero::after{content:'';position:absolute;left:-5%;bottom:-10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,var(--A1) 0%,transparent 70%);opacity:.15;pointer-events:none;animation:blobFloat 10s ease-in-out 2s infinite reverse}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-20px) scale(1.05)}66%{transform:translate(-10px,15px) scale(.97)}}
+
+.hero-left{position:relative;z-index:2}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--A1);color:#fff;font-family:var(--font-ui);font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.5rem 1rem;border-radius:30px;margin-bottom:1.5rem;animation:slideInLeft .7s ease forwards}
+.hero-eyebrow svg{width:14px;height:14px;fill:#fff}
+.hero-h1{font-family:var(--font-display);font-size:clamp(3.5rem,7vw,6.5rem);line-height:1;color:var(--TX);margin-bottom:1.2rem}
+.hero-h1 .highlight{color:var(--A1);display:block;position:relative}
+.hero-h1 .highlight::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:6px;background:var(--A2);border-radius:3px;transform:scaleX(0);transform-origin:left;animation:underlineGrow 1s ease .8s forwards}
+@keyframes underlineGrow{to{transform:scaleX(1)}}
+.hero-desc{font-size:1.05rem;line-height:1.7;color:var(--TX);opacity:.7;max-width:460px;margin-bottom:2rem}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.btn-solid{padding:.85rem 2rem;background:var(--A1);color:#fff;font-family:var(--font-ui);font-size:.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:50px;border:none;transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;box-shadow:0 6px 20px rgba(255,77,0,.35)}
+.btn-solid:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(255,77,0,.45)}
+.btn-ghost{padding:.85rem 2rem;background:transparent;color:var(--TX);font-family:var(--font-ui);font-size:.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:50px;border:2.5px solid var(--TX);transition:all .3s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-ghost:hover{background:var(--TX);color:var(--bg)}
+.hero-chips{display:flex;gap:.6rem;flex-wrap:wrap}
+.chip{padding:.35rem .9rem;background:rgba(0,0,0,.07);border-radius:20px;font-size:.75rem;font-weight:700;color:var(--TX);transition:all .25s}
+.chip:hover{background:var(--A1);color:#fff}
+
+/* HERO RIGHT */
+.hero-right{position:relative;z-index:2}
+.hero-img-stack{position:relative;height:540px}
+.hero-img-main{position:absolute;top:0;right:0;width:80%;height:420px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg)}
+.hero-img-main img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.hero-img-main:hover img{transform:scale(1.04)}
+.hero-img-side{position:absolute;bottom:0;left:0;width:50%;height:240px;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:5px solid var(--bg)}
+.hero-img-side img{width:100%;height:100%;object-fit:cover}
+.hero-badge{position:absolute;top:20px;left:-10px;background:var(--A2);color:var(--TX);padding:.8rem 1.2rem;border-radius:16px;font-family:var(--font-display);font-size:1rem;line-height:1.1;box-shadow:var(--shadow);animation:badgeBob 3s ease-in-out infinite}
+@keyframes badgeBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+.hero-rating{position:absolute;bottom:60px;right:-10px;background:#fff;padding:.8rem 1.2rem;border-radius:14px;box-shadow:var(--shadow);display:flex;gap:.5rem;align-items:center;animation:badgeBob 3s ease-in-out 1.5s infinite}
+.hero-rating .stars{color:#FFC700;font-size:1rem;letter-spacing:1px}
+.hero-rating .rate-text{font-weight:800;font-size:.85rem}
+.hero-stats-row{display:flex;gap:2rem;margin-top:0;position:absolute;bottom:10px;left:5%}
+.h-stat{text-align:center}
+.h-stat-n{font-family:var(--font-display);font-size:2rem;color:var(--A1)}
+.h-stat-l{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.6}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--A1);padding:.65rem 0;overflow:hidden;position:relative}
+.marquee-track{display:flex;white-space:nowrap;animation:marqueeRoll 18s linear infinite}
+.marquee-track span{font-family:var(--font-display);font-size:.9rem;color:#fff;letter-spacing:3px;padding:0 1.5rem}
+.marquee-track .sep{color:var(--A2);padding:0 .4rem}
+@keyframes marqueeRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* CATEGORIES SECTION */
+.section-head{text-align:center;margin-bottom:3rem}
+.section-eyebrow{display:inline-block;background:var(--A2);color:var(--TX);font-family:var(--font-ui);font-size:.72rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:.4rem 1rem;border-radius:20px;margin-bottom:.8rem}
+.section-title{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4rem);line-height:1;color:var(--TX)}
+.section-title span{color:var(--A1)}
+
+.cat-section{padding:6rem 5vw}
+.cat-bento{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:280px 280px;gap:1.2rem}
+.cat-item{border-radius:20px;overflow:hidden;position:relative;cursor:none;transition:transform .4s ease}
+.cat-item:hover{transform:scale(1.02)}
+.cat-item:nth-child(1){grid-column:span 2;grid-row:span 2}
+.cat-item:nth-child(2){grid-column:span 2}
+.cat-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.cat-item:hover img{transform:scale(1.08)}
+.cat-item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.1) 50%,transparent 100%)}
+.cat-item-info{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;z-index:2}
+.cat-item-tag{display:inline-block;background:var(--A1);color:#fff;font-size:.65rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:.3rem .7rem;border-radius:6px;margin-bottom:.5rem}
+.cat-item-name{font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.5rem);color:#fff;line-height:1}
+.cat-item-count{font-size:.78rem;color:rgba(255,255,255,.7);margin-top:.3rem;font-weight:600}
+.cat-cta{position:absolute;top:1rem;right:1rem;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;transition:all .3s;z-index:2;opacity:0;transform:scale(.8)}
+.cat-item:hover .cat-cta{opacity:1;transform:scale(1)}
+.cat-cta svg{width:16px;height:16px;stroke:var(--TX);stroke-width:2.5;fill:none}
+
+/* FEATURED PRODUCTS */
+.products-sec{padding:6rem 5vw;background:rgba(0,0,0,.03)}
+.prod-filters{display:flex;gap:.6rem;justify-content:center;margin-bottom:3rem;flex-wrap:wrap}
+.prod-filter{padding:.55rem 1.4rem;border-radius:30px;border:2px solid rgba(0,0,0,.12);font-family:var(--font-ui);font-size:.78rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--TX);background:transparent;transition:all .25s}
+.prod-filter.active,.prod-filter:hover{background:var(--A1);border-color:var(--A1);color:#fff}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.4rem}
+
+/* PRODUCT CARD */
+.p-card{background:#fff;border-radius:20px;overflow:hidden;transition:all .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.p-card:hover{transform:translateY(-10px);box-shadow:0 20px 50px rgba(0,0,0,.13)}
+.p-card-img{position:relative;aspect-ratio:4/3;overflow:hidden;background:#f5f5f5}
+.p-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.p-card:hover .p-card-img img{transform:scale(1.08)}
+.p-badge{position:absolute;top:12px;left:12px;padding:.3rem .7rem;border-radius:8px;font-size:.65rem;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.p-badge.new{background:#00C853;color:#fff}
+.p-badge.sale{background:#FF4D00;color:#fff}
+.p-badge.hot{background:#FFC700;color:#1A0A00}
+.p-actions-hover{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:.4rem;opacity:0;transform:translateX(10px);transition:all .3s}
+.p-card:hover .p-actions-hover{opacity:1;transform:translateX(0)}
+.p-act-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);border:none;transition:all .2s}
+.p-act-btn:hover{background:var(--A1)}
+.p-act-btn:hover svg{stroke:#fff}
+.p-act-btn svg{width:14px;height:14px;stroke:#333;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+.p-card-body{padding:1.2rem}
+.p-brand{font-size:.68rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--A1);margin-bottom:.3rem}
+.p-name{font-family:var(--font-ui);font-size:1rem;font-weight:700;color:#111;line-height:1.3;margin-bottom:.5rem}
+.p-stars{display:flex;gap:2px;margin-bottom:.6rem}
+.p-stars span{color:#FFC700;font-size:.75rem}
+.p-stars .cnt{font-size:.72rem;color:#888;font-weight:600;margin-left:4px}
+.p-footer{display:flex;align-items:center;justify-content:space-between}
+.p-price{font-family:var(--font-display);font-size:1.5rem;color:#111}
+.p-price .old{font-family:var(--font-body);font-size:.8rem;text-decoration:line-through;color:#aaa;margin-left:.3rem;font-weight:400}
+.p-add{width:38px;height:38px;border-radius:50%;background:var(--A1);border:none;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0}
+.p-add:hover{background:var(--TX);transform:rotate(90deg)}
+.p-add svg{width:16px;height:16px;stroke:#fff;stroke-width:2.5;fill:none}
+
+/* WHY US STRIP */
+.why-strip{padding:5rem 5vw}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.why-card{background:#fff;border-radius:20px;padding:2rem 1.5rem;text-align:center;transition:all .4s cubic-bezier(.34,1.56,.64,1);border:2px solid transparent}
+.why-card:hover{border-color:var(--A1);transform:translateY(-6px);box-shadow:var(--shadow)}
+.why-icon{width:60px;height:60px;border-radius:18px;background:var(--A2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.6rem}
+.why-title{font-family:var(--font-ui);font-size:1rem;font-weight:800;margin-bottom:.5rem}
+.why-desc{font-size:.82rem;color:#666;line-height:1.6}
+
+/* TESTIMONIALS */
+.testi-sec{padding:6rem 5vw;background:var(--TX)}
+.testi-sec .section-title{color:#fff}
+.testi-sec .section-eyebrow{background:var(--A2)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.t-card{background:rgba(255,255,255,.07);border-radius:20px;padding:2rem;border:1px solid rgba(255,255,255,.08);transition:all .3s}
+.t-card:hover{background:rgba(255,255,255,.12);transform:translateY(-4px)}
+.t-quote{font-size:3rem;color:var(--A2);line-height:1;margin-bottom:.8rem;font-family:var(--font-display)}
+.t-text{font-size:.9rem;line-height:1.7;color:rgba(255,255,255,.75);margin-bottom:1.5rem}
+.t-author{display:flex;align-items:center;gap:.8rem}
+.t-avatar{width:44px;height:44px;border-radius:50%;background:var(--A1);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.2rem;color:#fff;flex-shrink:0}
+.t-name{font-weight:800;color:#fff;font-size:.9rem}
+.t-bike{font-size:.72rem;color:var(--A2);font-weight:700;letter-spacing:1px}
+
+/* NEWSLETTER */
+.nl-sec{padding:6rem 5vw;background:linear-gradient(135deg,var(--A1) 0%,var(--A2) 100%);position:relative;overflow:hidden;text-align:center}
+.nl-sec::before{content:'◎';position:absolute;font-size:30rem;color:rgba(255,255,255,.05);top:-10%;right:-5%;font-family:var(--font-display);pointer-events:none;line-height:1}
+.nl-title{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4rem);color:#fff;margin-bottom:.8rem;position:relative;z-index:1}
+.nl-sub{color:rgba(255,255,255,.8);font-size:1rem;margin-bottom:2rem;position:relative;z-index:1}
+.nl-form{display:flex;max-width:480px;margin:0 auto;background:rgba(255,255,255,.2);border-radius:50px;padding:6px;position:relative;z-index:1;backdrop-filter:blur(10px)}
+.nl-form input{flex:1;background:none;border:none;outline:none;padding:.7rem 1.2rem;color:#fff;font-family:var(--font-body);font-size:.9rem}
+.nl-form input::placeholder{color:rgba(255,255,255,.65)}
+.nl-form button{padding:.7rem 1.5rem;background:#fff;color:var(--A1);border:none;border-radius:40px;font-family:var(--font-ui);font-size:.8rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:all .3s}
+.nl-form button:hover{background:var(--TX);color:#fff}
+
+.shop-hero{padding:110px 5vw 60px;position:relative;overflow:hidden;background-color:var(--shop-bg);background-image:var(--shop-hero-image, linear-gradient(135deg,#E8F4FF 60%,#C5E3FF 100%));background-size:cover;background-position:center}
+.shop-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.04));pointer-events:none;z-index:0}
+.shop-hero::after{content:'SHOP';font-family:var(--font-display);position:absolute;right:-2%;top:0%;font-size:25vw;color:rgba(0,87,255,.04);pointer-events:none;line-height:1;z-index:1}
+.shop-hero-inner{position:relative;z-index:2;max-width:600px}
+.shop-hero h1{font-family:var(--font-display);font-size:clamp(3.5rem,8vw,6rem);color:var(--shop-text);line-height:1;margin-bottom:.8rem}
+.shop-hero h1 span{color:var(--shop-accent)}
+.shop-hero p{color:rgba(0,12,46,.6);font-size:.95rem;line-height:1.7}
+.shop-toolbar{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 5vw;background:#fff;border-bottom:1px solid rgba(0,87,255,.1);flex-wrap:wrap;gap:1rem;position:sticky;top:72px;z-index:100}
+.shop-filters{display:flex;gap:.6rem;flex-wrap:wrap}
+.s-filter{padding:.45rem 1rem;border-radius:20px;border:2px solid rgba(0,87,255,.15);font-family:var(--font-ui);font-size:.75rem;font-weight:700;text-transform:uppercase;color:var(--shop-text);background:transparent;transition:all .25s}
+.s-filter.active,.s-filter:hover{background:var(--shop-accent);border-color:var(--shop-accent);color:#fff}
+.shop-sort select{border:2px solid rgba(0,87,255,.15);padding:.45rem 1rem;border-radius:20px;font-family:var(--font-ui);font-size:.75rem;font-weight:700;color:var(--shop-text);background:#fff;outline:none;cursor:none}
+.shop-body{padding:3rem 5vw;display:grid;grid-template-columns:220px 1fr;gap:2rem;align-items:start}
+.shop-sidebar{background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 4px 20px rgba(0,87,255,.06);position:sticky;top:140px}
+.sidebar-section{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #f0f0f0}
+.sidebar-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.sidebar-section h4{font-family:var(--font-ui);font-size:.75rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--shop-accent);margin-bottom:.8rem}
+.s-check{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+.s-check input{accent-color:var(--shop-accent);width:15px;height:15px}
+.s-check label{font-size:.82rem;font-weight:600;color:#444;cursor:none}
+.price-range{width:100%;accent-color:var(--shop-accent)}
+.price-vals{display:flex;justify-content:space-between;font-size:.75rem;font-weight:700;color:var(--shop-accent);margin-top:.3rem}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.2rem}
+.shop-count{font-family:var(--font-ui);font-size:.8rem;font-weight:700;color:#888;letter-spacing:1px;margin-bottom:1.2rem;text-transform:uppercase}
+
+/* ══════════════════════════════════════════
+   ██ ABOUT PAGE — GREEN THEME
+══════════════════════════════════════════ */
+.about-hero{min-height:100vh;padding:120px 5vw 80px;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;overflow:hidden}
+.about-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Ccircle cx='30' cy='30' r='2' fill='%2300A550' fill-opacity='.07'/%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.about-left{position:relative;z-index:1}
+.about-left .section-eyebrow{background:var(--about-accent);color:#fff}
+.about-h1{font-family:var(--font-display);font-size:clamp(3rem,7vw,5.5rem);color:var(--about-text);line-height:1;margin-bottom:1.5rem}
+.about-h1 span{color:var(--about-accent)}
+.about-left p{font-size:.95rem;line-height:1.8;color:rgba(0,26,10,.65);margin-bottom:1.2rem}
+.about-right{position:relative;z-index:1}
+.about-img-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;height:480px}
+.ab-img{border-radius:18px;overflow:hidden}
+.ab-img:nth-child(1){grid-row:span 2}
+.ab-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.ab-img:hover img{transform:scale(1.05)}
+.about-vals{padding:5rem 5vw;background:var(--about-accent)}
+.about-vals .section-title{color:#fff;text-align:center;margin-bottom:3rem}
+.vals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.val-card{background:rgba(255,255,255,.1);border-radius:20px;padding:2rem;border:1px solid rgba(255,255,255,.15);text-align:center;backdrop-filter:blur(10px);transition:all .3s}
+.val-card:hover{background:rgba(255,255,255,.2);transform:translateY(-5px)}
+.val-icon{font-size:2.5rem;margin-bottom:1rem}
+.val-title{font-family:var(--font-display);font-size:1.4rem;color:#fff;margin-bottom:.6rem}
+.val-desc{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.6}
+.team-sec{padding:6rem 5vw}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.team-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,165,80,.08);transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.team-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,165,80,.15)}
+.team-img{height:220px;overflow:hidden;background:#f5f5f5}
+.team-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.team-card:hover .team-img img{transform:scale(1.06)}
+.team-info{padding:1.2rem}
+.team-name{font-family:var(--font-ui);font-size:1.05rem;font-weight:800;color:#111;margin-bottom:.2rem}
+.team-role{font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--about-accent)}
+
+/* ══════════════════════════════════════════
+   ██ CONTACT PAGE — PINK THEME
+══════════════════════════════════════════ */
+.contact-hero{padding:110px 5vw 60px;position:relative;overflow:hidden;background:linear-gradient(135deg,#FFF0F8 60%,#FFD6ED 100%)}
+.contact-hero::before{content:'📍';font-size:20rem;position:absolute;right:-3%;top:-10%;opacity:.08;pointer-events:none}
+.contact-hero h1{font-family:var(--font-display);font-size:clamp(3rem,7vw,5.5rem);color:var(--contact-text);position:relative;z-index:1}
+.contact-hero h1 span{color:var(--contact-accent)}
+.contact-body{padding:4rem 5vw;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.contact-info-box{background:#fff;border-radius:24px;padding:2.5rem;box-shadow:0 8px 40px rgba(224,0,122,.08)}
+.contact-info-box h3{font-family:var(--font-display);font-size:2rem;color:var(--contact-text);margin-bottom:1.5rem}
+.c-detail{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;padding:1rem;border-radius:14px;transition:background .25s}
+.c-detail:hover{background:rgba(224,0,122,.05)}
+.c-icon{width:46px;height:46px;border-radius:14px;background:rgba(224,0,122,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.3rem}
+.c-text strong{display:block;font-family:var(--font-ui);font-size:.75rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--contact-accent);margin-bottom:.2rem}
+.c-text span{font-size:.88rem;color:#555;line-height:1.5}
+.map-box{border-radius:18px;overflow:hidden;height:200px;background:linear-gradient(135deg,#FFD6ED,#FFC2E0);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.6rem;margin-top:1.5rem;border:2px solid rgba(224,0,122,.1)}
+.map-box .map-label{font-family:var(--font-display);font-size:1.2rem;color:var(--contact-accent)}
+.map-box p{font-size:.78rem;color:#888;text-align:center}
+.contact-form-box{background:#fff;border-radius:24px;padding:2.5rem;box-shadow:0 8px 40px rgba(224,0,122,.08)}
+.contact-form-box h3{font-family:var(--font-display);font-size:2rem;color:var(--contact-text);margin-bottom:1.5rem}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.f-group{margin-bottom:1.2rem}
+.f-group label{display:block;font-family:var(--font-ui);font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--contact-accent);margin-bottom:.4rem}
+.f-group input,.f-group textarea,.f-group select{width:100%;background:#FFF0F8;border:2px solid rgba(224,0,122,.15);border-radius:12px;padding:.75rem 1rem;font-family:var(--font-body);font-size:.9rem;color:var(--contact-text);outline:none;transition:border-color .25s;resize:none;cursor:none}
+.f-group input:focus,.f-group textarea:focus,.f-group select:focus{border-color:var(--contact-accent);background:#fff}
+.f-group textarea{height:120px}
+.f-group select option{background:#fff}
+.btn-pink{padding:.9rem 2.5rem;background:var(--contact-accent);color:#fff;font-family:var(--font-ui);font-size:.85rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;border:none;border-radius:50px;width:100%;transition:all .3s;box-shadow:0 6px 20px rgba(224,0,122,.3)}
+.btn-pink:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(224,0,122,.4)}
+.social-strip{display:flex;gap:.8rem;margin-top:1.5rem}
+.soc-btn{flex:1;padding:.8rem;border:2px solid rgba(224,0,122,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--font-ui);font-size:.75rem;font-weight:800;color:var(--contact-accent);transition:all .3s}
+.soc-btn:hover{background:var(--contact-accent);color:#fff;border-color:var(--contact-accent)}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer{background:#0D0D0D;color:#fff;padding:5rem 5vw 2.5rem}
+.footer-top{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:2rem}
+.footer-brand .nav-logo{display:block;margin-bottom:1rem;font-size:2rem}
+.footer-brand p{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.7;max-width:280px;margin-bottom:1.5rem}
+.footer-socials{display:flex;gap:.7rem}
+.f-soc{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;transition:all .3s}
+.f-soc:hover{background:var(--A1);border-color:var(--A1)}
+.f-soc svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.footer-col h4{font-family:var(--font-ui);font-size:.72rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.2rem}
+.footer-col li{margin-bottom:.6rem}
+.footer-col li a{font-size:.85rem;color:rgba(255,255,255,.6);transition:color .2s;display:inline-flex;align-items:center;gap:.4rem}
+.footer-col li a:hover{color:#fff}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{font-size:.78rem;color:rgba(255,255,255,.35)}
+.footer-bottom p span{color:var(--A1)}
+.footer-credit-link{color:#fff;font-weight:800;text-decoration:none;letter-spacing:.5px;transition:color .25s ease,text-shadow .25s ease;text-shadow:0 0 10px rgba(255,255,255,.25)}
+.footer-credit-link:hover{color:var(--A1)}
+.pay-tags{display:flex;gap:.5rem}
+.pay-tag{font-size:.6rem;font-weight:800;letter-spacing:1.5px;border:1px solid rgba(255,255,255,.15);padding:.3rem .6rem;border-radius:6px;color:rgba(255,255,255,.4)}
+
+/* ══════════════════════════════════════════
+   CART DRAWER
+══════════════════════════════════════════ */
+.cart-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:800;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(6px)}
+.cart-backdrop.show{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);background:#fff;z-index:801;transform:translateX(100%);transition:transform .4s cubic-bezier(.77,0,.175,1);display:flex;flex-direction:column;border-radius:20px 0 0 20px;overflow:hidden}
+.cart-drawer.show{transform:translateX(0)}
+.cart-drawer-head{padding:1.5rem;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;background:var(--A1)}
+.cart-drawer-head h3{font-family:var(--font-display);font-size:1.5rem;color:#fff;letter-spacing:1px}
+.cart-x{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);border:none;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.cart-x:hover{background:rgba(255,255,255,.4)}
+.cart-x svg{width:16px;height:16px;stroke:#fff;stroke-width:2.5;fill:none}
+.cart-items-wrap{flex:1;overflow-y:auto;padding:1.5rem}
+.cart-empty{text-align:center;padding:3rem 1rem;color:#aaa}
+.cart-empty svg{width:56px;height:56px;stroke:#ddd;stroke-width:1.5;fill:none;margin:0 auto 1rem}
+.cart-empty p{font-family:var(--font-ui);font-size:.9rem;font-weight:700}
+.cart-item-row{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid #f8f8f8;align-items:center}
+.c-item-img{width:68px;height:68px;border-radius:12px;object-fit:cover;flex-shrink:0;background:#f5f5f5}
+.c-item-info{flex:1}
+.c-item-name{font-family:var(--font-ui);font-size:.85rem;font-weight:700;color:#111;margin-bottom:.25rem}
+.c-item-price{font-family:var(--font-display);font-size:1.1rem;color:var(--A1)}
+.c-qty{display:flex;align-items:center;gap:.5rem;margin-top:.4rem}
+.c-qty-btn{width:26px;height:26px;border-radius:50%;background:#f5f5f5;border:none;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;font-weight:700}
+.c-qty-btn:hover{background:var(--A1);color:#fff}
+.c-qty-val{font-weight:800;font-size:.85rem;min-width:20px;text-align:center}
+.cart-foot{padding:1.5rem;border-top:2px solid #f0f0f0}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.ct-label{font-family:var(--font-ui);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888}
+.ct-val{font-family:var(--font-display);font-size:2rem;color:#111}
+.checkout-btn{display:block;width:100%;padding:1rem;background:var(--A1);color:#fff;text-align:center;font-family:var(--font-ui);font-size:.9rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;border-radius:16px;border:none;transition:all .3s;box-shadow:0 6px 20px rgba(255,77,0,.3)}
+.checkout-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,77,0,.4)}
+
+/* ══════════════════════════════════════════
+   SEARCH PANEL
+══════════════════════════════════════════ */
+.search-panel{position:fixed;inset:0;background:rgba(255,255,255,.97);z-index:700;display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(12px)}
+.search-panel.show{opacity:1;pointer-events:all}
+.search-inner{width:min(680px,90vw)}
+.search-label-txt{font-family:var(--font-ui);font-size:.72rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--A1);margin-bottom:.8rem}
+.search-input-wrap{position:relative;margin-bottom:1.5rem}
+.search-input-wrap input{width:100%;border:none;border-bottom:3px solid #eee;padding:.8rem .5rem;font-family:var(--font-display);font-size:clamp(2rem,6vw,4rem);letter-spacing:1px;color:#111;outline:none;background:transparent;transition:border-color .3s}
+.search-input-wrap input:focus{border-color:var(--A1)}
+.search-input-wrap input::placeholder{color:#ddd}
+.search-close-btn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:#f5f5f5;border:none;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.search-close-btn:hover{background:var(--A1)}
+.search-close-btn:hover svg{stroke:#fff}
+.search-close-btn svg{width:18px;height:18px;stroke:#666;stroke-width:2.5;fill:none}
+.search-tags-row{display:flex;gap:.6rem;flex-wrap:wrap}
+.s-tag{padding:.4rem .9rem;background:#f0f0f0;border-radius:20px;font-size:.75rem;font-weight:700;color:#555;border:none;transition:all .2s}
+.s-tag:hover{background:var(--A1);color:#fff}
+
+/* ══════════════════════════════════════════
+   TOAST + WHATSAPP
+══════════════════════════════════════════ */
+.toast-box{position:fixed;bottom:2rem;right:2rem;background:#111;color:#fff;padding:.9rem 1.5rem;border-radius:14px;font-family:var(--font-ui);font-size:.82rem;font-weight:700;z-index:2000;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:.6rem;max-width:320px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast-box.show{transform:translateY(0);opacity:1}
+.toast-icon{font-size:1.2rem;flex-shrink:0}
+.wa-float{position:fixed;bottom:2rem;left:2rem;z-index:600;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(37,211,102,.45);transition:all .3s;animation:waPulse 2.5s infinite}
+.wa-float:hover{transform:scale(1.12);box-shadow:0 10px 32px rgba(37,211,102,.6)}
+.wa-float svg{width:28px;height:28px;fill:#fff}
+@keyframes waPulse{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.45)}50%{box-shadow:0 6px 24px rgba(37,211,102,.45),0 0 0 10px rgba(37,211,102,.1)}}
+
+/* ══════════════════════════════════════════
+   ANIMATIONS + REVEAL
+══════════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s cubic-bezier(.34,1.56,.64,1)}
+.reveal.up{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .7s,transform .7s cubic-bezier(.34,1.56,.64,1)}
+.reveal-left.up{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .7s,transform .7s cubic-bezier(.34,1.56,.64,1)}
+.reveal-right.up{opacity:1;transform:translateX(0)}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+.stagger-1{transition-delay:.1s}.stagger-2{transition-delay:.2s}.stagger-3{transition-delay:.3s}.stagger-4{transition-delay:.4s}.stagger-5{transition-delay:.5s}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;padding:100px 5vw 50px}
+  .hero-right{display:none}
+  .cat-bento{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .cat-item:nth-child(1){grid-column:span 2}
+  .cat-item:nth-child(2){grid-column:span 2}
+  .cat-item .img-wrap{aspect-ratio:16/9}
+  .why-grid{grid-template-columns:1fr 1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr;gap:2rem}
+  .about-hero{grid-template-columns:1fr}
+  .about-img-grid{display:none}
+  .vals-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr 1fr}
+  .contact-body{grid-template-columns:1fr}
+  .shop-body{grid-template-columns:1fr}
+  .shop-sidebar{position:static;display:flex;flex-wrap:wrap;gap:1.5rem}
+  .sidebar-section{flex:1;min-width:150px;border-bottom:none;margin-bottom:0;padding-bottom:0}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero{min-height:auto;padding:90px 5vw 50px}
+  .hero-stats-row{display:none}
+  .cat-bento{grid-template-columns:1fr}
+  .cat-item:nth-child(1),.cat-item:nth-child(2){grid-column:span 1}
+  .why-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr}
+  .f-row{grid-template-columns:1fr}
+  .hero-ctas{flex-direction:column;align-items:flex-start}
+  .nl-form{flex-direction:column;border-radius:20px;background:rgba(255,255,255,.15)}
+  .nl-form input{padding:1rem 1.2rem}
+  .nl-form button{border-radius:12px;padding:.8rem}
+  body{cursor:auto}
+  #cursor,#cursor-trail{display:none}
+  .shop-toolbar{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .prod-grid,.shop-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ CURSOR ══ -->
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<!-- ══ LOADER ══ -->
+<div id="loader">
+  <div class="loader-word">FUN <span>LOADED</span></div>
+  <div class="loader-dots"><div></div><div></div><div></div></div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <a class="nav-logo" href="#" onclick="goPage('home')">
+    <span class="logo-dot"></span>Fun Loaded
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#" onclick="goPage('home')" id="nl-home">Home</a>
+    <a class="nav-link" href="#" onclick="goPage('shop')" id="nl-shop">Shop</a>
+    <a class="nav-link" href="#" onclick="goPage('about')" id="nl-about">About</a>
+    <a class="nav-link" href="#" onclick="goPage('contact')" id="nl-contact">Contact</a>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-btn" onclick="openSearch()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="nav-btn" onclick="openCart()">
+      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="goPage('home');toggleMobileMenu()">Home</a>
+  <a href="#" onclick="goPage('shop');toggleMobileMenu()">Shop</a>
+  <a href="#" onclick="goPage('about');toggleMobileMenu()">About</a>
+  <a href="#" onclick="goPage('contact');toggleMobileMenu()">Contact</a>
+  <a href="#" onclick="openCart();toggleMobileMenu()">🛒 Cart</a>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Pondicherry's #1 Ride Gear Shop
+      </div>
+      <h1 class="hero-h1">GEAR UP<br><span class="highlight">RIDE HARD</span></h1>
+      <p class="hero-desc">Premium helmets, riding jackets, gloves & custom bike fitments — curated for riders who live for the road. Located in the heart of Pondicherry.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-solid" onclick="goPage('shop')">🛍️ Shop Now</a>
+        <a href="#" class="btn-ghost" onclick="goPage('about')">Our Story →</a>
+      </div>
+      <div class="hero-chips">
+        <span class="chip">🪖 Helmets</span>
+        <span class="chip">🧥 Jackets</span>
+        <span class="chip">🧤 Gloves</span>
+        <span class="chip">⚙️ Fitments</span>
+        <span class="chip">🥾 Boots</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-img-stack">
+        <div class="hero-img-main">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop" alt="Rider with helmet">
+        </div>
+        <div class="hero-img-side">
+          <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=500&q=80&fit=crop" alt="Riding gear">
+        </div>
+        <div class="hero-badge">⚡ EST.<br>PONDY<br>2018</div>
+        <div class="hero-rating">
+          <div class="stars">★★★★★</div>
+          <div class="rate-text">4.9 / 5<br><span style="font-size:.65rem;font-weight:400;color:#888">4000+ riders</span></div>
+        </div>
+        <div class="hero-stats-row">
+          <div class="h-stat"><div class="h-stat-n">500+</div><div class="h-stat-l">Products</div></div>
+          <div class="h-stat"><div class="h-stat-n">4K+</div><div class="h-stat-l">Riders</div></div>
+          <div class="h-stat"><div class="h-stat-n">8+</div><div class="h-stat-l">Brands</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Helmets</span><span class="sep">✦</span><span>Riding Jackets</span><span class="sep">✦</span><span>Gloves</span><span class="sep">✦</span><span>Knee Guards</span><span class="sep">✦</span><span>Riding Boots</span><span class="sep">✦</span><span>Bike Accessories</span><span class="sep">✦</span><span>Custom Fitments</span><span class="sep">✦</span><span>Fun Loaded Pondicherry</span><span class="sep">✦</span>
+      <span>Helmets</span><span class="sep">✦</span><span>Riding Jackets</span><span class="sep">✦</span><span>Gloves</span><span class="sep">✦</span><span>Knee Guards</span><span class="sep">✦</span><span>Riding Boots</span><span class="sep">✦</span><span>Bike Accessories</span><span class="sep">✦</span><span>Custom Fitments</span><span class="sep">✦</span><span>Fun Loaded Pondicherry</span><span class="sep">✦</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="cat-section">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Browse By Category</div>
+      <h2 class="section-title">SHOP THE <span>COLLECTION</span></h2>
+    </div>
+    <div class="cat-bento reveal">
+      <div class="cat-item" onclick="goPage('shop')">
+        <img src="https://i.pinimg.com/1200x/00/b5/4e/00b54e6ad21061de2fa3dec36fd07f96.jpg" alt="Helmets">
+        <div class="cat-item-overlay"></div>
+        <div class="cat-item-info">
+          <div class="cat-item-tag">Top Seller</div>
+          <div class="cat-item-name">HELMETS</div>
+          <div class="cat-item-count">Full-Face · Open Face · Off-Road · Modular</div>
+        </div>
+        <div class="cat-cta"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+      </div>
+      <div class="cat-item" onclick="goPage('shop')">
+        <img src="https://i.pinimg.com/736x/c6/91/ab/c691abde92691f27a5ff23f0c421a5e9.jpg" alt="Jackets">
+        <div class="cat-item-overlay"></div>
+        <div class="cat-item-info">
+          <div class="cat-item-tag">Style + Safety</div>
+          <div class="cat-item-name">JACKETS</div>
+          <div class="cat-item-count">Leather · Mesh · Textile · CE Rated</div>
+        </div>
+        <div class="cat-cta"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+      </div>
+      <div class="cat-item" onclick="goPage('shop')">
+        <img src="https://i.pinimg.com/1200x/98/b9/4b/98b94bc52b331d13d01c08c97206edc5.jpg" alt="Gloves">
+        <div class="cat-item-overlay"></div>
+        <div class="cat-item-info">
+          <div class="cat-item-tag">Essential</div>
+          <div class="cat-item-name">GLOVES</div>
+          <div class="cat-item-count">Summer · Winter · Racing · Short-Cuff</div>
+        </div>
+        <div class="cat-cta"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+      </div>
+      <div class="cat-item" onclick="goPage('shop')">
+        <img src="https://i.pinimg.com/736x/50/32/8f/50328f025cbae7a1eeb35d0305cda3b3.jpg" alt="Accessories">
+        <div class="cat-item-overlay"></div>
+        <div class="cat-item-info">
+          <div class="cat-item-tag">Customize</div>
+          <div class="cat-item-name">ACCESSORIES</div>
+          <div class="cat-item-count">Fitments · Lights · Guards · Luggage</div>
+        </div>
+        <div class="cat-cta"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="products-sec">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Hand-Picked</div>
+      <h2 class="section-title">FEATURED <span>GEAR</span></h2>
+    </div>
+    <div class="prod-filters reveal">
+      <button class="prod-filter active" onclick="filterHome(this,'all')">All</button>
+      <button class="prod-filter" onclick="filterHome(this,'helmets')">🪖 Helmets</button>
+      <button class="prod-filter" onclick="filterHome(this,'jackets')">🧥 Jackets</button>
+      <button class="prod-filter" onclick="filterHome(this,'gloves')">🧤 Gloves</button>
+      <button class="prod-filter" onclick="filterHome(this,'accessories')">⚙️ Accessories</button>
+    </div>
+    <div class="prod-grid reveal" id="home-prod-grid"></div>
+    <div style="text-align:center;margin-top:2.5rem" class="reveal">
+      <a href="#" class="btn-solid" onclick="goPage('shop')">View All 500+ Products →</a>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why-strip">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Why Choose Us</div>
+      <h2 class="section-title">THE <span>FUN LOADED</span> DIFFERENCE</h2>
+    </div>
+    <div class="why-grid reveal">
+      <div class="why-card">
+        <div class="why-icon">🛡️</div>
+        <div class="why-title">CE Certified Gear</div>
+        <div class="why-desc">Every product meets international safety standards. Your protection is our priority.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🏍️</div>
+        <div class="why-title">Rider Experts</div>
+        <div class="why-desc">Our team are passionate riders. We know your needs because we ride too.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💸</div>
+        <div class="why-title">Best Price</div>
+        <div class="why-desc">Competitive prices with genuine products. No compromise on quality or wallet.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📍</div>
+        <div class="why-title">Local — Pondicherry</div>
+        <div class="why-desc">Walk-in to Mission Street, Pondicherry. Real people, real service, real gear.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testi-sec">
+    <div class="section-head reveal">
+      <div class="section-eyebrow" style="background:var(--A2);color:var(--TX)">Rider Reviews</div>
+      <h2 class="section-title" style="color:#fff">WHAT RIDERS <span style="color:var(--A2)">SAY</span></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="t-card reveal stagger-1">
+        <div class="t-quote">"</div>
+        <p class="t-text">Picked up my Steelbird SBH-40 from Fun Loaded. Staff really knows their helmets. Perfect fit, amazing quality. Best gear shop in all of Pondicherry!</p>
+        <div class="t-author"><div class="t-avatar">R</div><div><div class="t-name">Rajesh Kumar</div><div class="t-bike">Royal Enfield Classic 350</div></div></div>
+      </div>
+      <div class="t-card reveal stagger-2">
+        <div class="t-quote">"</div>
+        <p class="t-text">My riding jacket and gloves from here saved me during a rain ride on ECR. CE armor on point! They helped me pick the right fit. Highly recommend.</p>
+        <div class="t-author"><div class="t-avatar">P</div><div><div class="t-name">Priya Selvam</div><div class="t-bike">KTM Duke 390</div></div></div>
+      </div>
+      <div class="t-card reveal stagger-3">
+        <div class="t-quote">"</div>
+        <p class="t-text">Got custom LED fitments and bar end mirrors done here. The bike looks absolutely insane. Great prices, great people, great vibes. 10/10 experience.</p>
+        <div class="t-author"><div class="t-avatar">A</div><div><div class="t-name">Arun Mathew</div><div class="t-bike">Bajaj Dominar 400</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="nl-sec">
+    <div class="section-eyebrow reveal" style="background:rgba(255,255,255,.3);color:#fff">Exclusive Access</div>
+    <h2 class="nl-title reveal">JOIN THE PACK</h2>
+    <p class="nl-sub reveal">Get early sale alerts, new arrivals & riding tips in your inbox.</p>
+    <form class="nl-form reveal" onsubmit="handleNL(event)">
+      <input type="email" placeholder="your@email.com" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+</div><!-- /home -->
+
+<!-- ══════════════════════════════════════════
+     SHOP PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-shop">
+  <div class="shop-hero" style="--shop-hero-image: url('https://images.unsplash.com/photo-1520975698513-2b4a0f4f0c2a?auto=format&fit=crop&w=1600&q=80')">
+    <div class="shop-hero-inner">
+      <div class="section-eyebrow" style="background:var(--shop-accent);color:#fff;display:inline-block;padding:.4rem 1rem;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem">500+ Products</div>
+      <h1>ALL <span>GEAR</span><br>ALL <span>SIZES</span></h1>
+      <p>Browse our complete collection of helmets, jackets, gloves, boots & bike accessories. Filter by category and find your perfect fit.</p>
+    </div>
+  </div>
+  <div class="shop-toolbar">
+    <div class="shop-filters" id="shop-filter-tabs">
+      <button class="s-filter active" onclick="shopFilter(this,'all')">All</button>
+      <button class="s-filter" onclick="shopFilter(this,'helmets')">🪖 Helmets</button>
+      <button class="s-filter" onclick="shopFilter(this,'jackets')">🧥 Jackets</button>
+      <button class="s-filter" onclick="shopFilter(this,'gloves')">🧤 Gloves</button>
+      <button class="s-filter" onclick="shopFilter(this,'accessories')">⚙️ Accessories</button>
+    </div>
+    <div class="shop-sort">
+      <select onchange="shopSort(this.value)">
+        <option value="def">Sort: Featured</option>
+        <option value="plo">Price: Low → High</option>
+        <option value="phi">Price: High → Low</option>
+        <option value="az">Name A → Z</option>
+      </select>
+    </div>
+  </div>
+  <div class="shop-body">
+    <div class="shop-sidebar">
+      <div class="sidebar-section">
+        <h4>Category</h4>
+        <label class="s-check"><input type="checkbox" checked> <label>Helmets</label></label>
+        <label class="s-check"><input type="checkbox" checked> <label>Jackets</label></label>
+        <label class="s-check"><input type="checkbox" checked> <label>Gloves</label></label>
+        <label class="s-check"><input type="checkbox" checked> <label>Accessories</label></label>
+      </div>
+      <div class="sidebar-section">
+        <h4>Brand</h4>
+        <label class="s-check"><input type="checkbox" checked> <label>Steelbird</label></label>
+        <label class="s-check"><input type="checkbox" checked> <label>Vega</label></label>
+        <label class="s-check"><input type="checkbox" checked> <label>LS2</label></label>
+        <label class="s-check"><input type="checkbox" checked> <label>Rynox</label></label>
+        <label class="s-check"><input type="checkbox" checked> <label>MT Helmets</label></label>
+      </div>
+      <div class="sidebar-section">
+        <h4>Price Range</h4>
+        <input type="range" class="price-range" min="500" max="20000" value="20000" oninput="document.getElementById('priceMax').textContent='₹'+parseInt(this.value).toLocaleString('en-IN')">
+        <div class="price-vals"><span>₹500</span><span id="priceMax">₹20,000</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="shop-count" id="shop-count">Showing 12 products</div>
+      <div class="shop-grid" id="shop-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ABOUT PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <div class="about-left">
+      <div class="section-eyebrow" style="background:var(--about-accent);color:#fff;display:inline-block;padding:.4rem 1rem;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem">Our Story</div>
+      <h1 class="about-h1">BORN ON<br>THE <span>ROAD</span></h1>
+      <p>Fun Loaded started as a rider's dream in Pondicherry back in 2018. What began as a small corner shop on Mission Street has grown into the city's most trusted motorcycle gear destination.</p>
+      <p>We know the thrill of the ECR at dawn, the freedom of riding through French Quarter lanes, the joy of gearing up for a long weekend tour. Our shop is built from that passion.</p>
+      <p>Every helmet, jacket, glove and fitment we stock is hand-picked by our team of passionate riders. If it doesn't meet our standards, it doesn't reach our shelves.</p>
+      <div style="display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap">
+        <div><div style="font-family:var(--font-display);font-size:2.5rem;color:var(--about-accent)">2018</div><div style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888">Founded</div></div>
+        <div><div style="font-family:var(--font-display);font-size:2.5rem;color:var(--about-accent)">4000+</div><div style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888">Riders Served</div></div>
+        <div><div style="font-family:var(--font-display);font-size:2.5rem;color:var(--about-accent)">500+</div><div style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#888">Products</div></div>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="about-img-grid">
+        <div class="ab-img"><img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80&fit=crop" alt="Rider"></div>
+        <div class="ab-img"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80&fit=crop" alt="Helmet"></div>
+        <div class="ab-img"><img src="https://i.pinimg.com/1200x/ca/8d/7c/ca8d7cb199b6d831ddb3307d9da887f5.jpg" alt="Jacket"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-vals">
+    <h2 class="section-title" style="color:#fff;text-align:center;margin-bottom:3rem">OUR <span style="color:var(--about-accent2)">VALUES</span></h2>
+    <div class="vals-grid">
+      <div class="val-card">
+        <div class="val-icon">🛡️</div>
+        <div class="val-title">Safety First</div>
+        <div class="val-desc">We stock only CE-certified gear that meets or exceeds safety standards. Your life is worth the best protection.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-icon">🤝</div>
+        <div class="val-title">Community</div>
+        <div class="val-desc">We're riders helping riders. Fun Loaded is a community hub for the Pondicherry moto community.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-icon">✨</div>
+        <div class="val-title">Quality Always</div>
+        <div class="val-desc">From ₹500 gloves to ₹25,000 helmets — every product earns its place through rigorous quality checks.</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="team-sec">
+    <div class="section-head reveal">
+      <div class="section-eyebrow" style="background:var(--about-accent2);color:var(--about-text)">Meet The Team</div>
+      <h2 class="section-title">THE <span style="color:var(--about-accent)">CREW</span></h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal stagger-1">
+        <div class="team-img"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80&fit=crop&faces=1" alt="Team"></div>
+        <div class="team-info">
+          <div class="team-name">Karthik Rajan</div>
+          <div class="team-role">Founder & Head Rider</div>
+        </div>
+      </div>
+      <div class="team-card reveal stagger-2">
+        <div class="team-img"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80&fit=crop&faces=1" alt="Team"></div>
+        <div class="team-info">
+          <div class="team-name">Suresh Kumar</div>
+          <div class="team-role">Gear Expert & Fitter</div>
+        </div>
+      </div>
+      <div class="team-card reveal stagger-3">
+        <div class="team-img"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80&fit=crop&faces=1" alt="Team"></div>
+        <div class="team-info">
+          <div class="team-name">Mani Selvam</div>
+          <div class="team-role">Accessories & Fitments</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CONTACT PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="contact-hero">
+    <div class="section-eyebrow" style="background:var(--contact-accent);color:#fff;display:inline-block;padding:.4rem 1rem;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem">We're Here</div>
+    <h1>GET IN <span>TOUCH</span></h1>
+    <p style="color:rgba(26,0,16,.6);font-size:.95rem;margin-top:.8rem;max-width:450px;position:relative;z-index:1">Visit us in Pondicherry, call us or drop a message. We reply within 24 hours!</p>
+  </div>
+  <div class="contact-body">
+    <div>
+      <div class="contact-info-box">
+        <h3>FIND US</h3>
+        <div class="c-detail">
+          <div class="c-icon">📍</div>
+          <div class="c-text"><strong>Address</strong><span>Mission Street, White Town<br>Pondicherry — 605 001, India</span></div>
+        </div>
+        <div class="c-detail">
+          <div class="c-icon">📞</div>
+          <div class="c-text"><strong>Phone</strong><span>+91 98765 43210<br>+91 98765 43211</span></div>
+        </div>
+        <div class="c-detail">
+          <div class="c-icon">✉️</div>
+          <div class="c-text"><strong>Email</strong><span>hello@funloaded.in</span></div>
+        </div>
+        <div class="c-detail">
+          <div class="c-icon">🕙</div>
+          <div class="c-text"><strong>Hours</strong><span>Mon – Sat: 10:00 AM – 8:00 PM<br>Sunday: 11:00 AM – 6:00 PM</span></div>
+        </div>
+        <div class="social-strip">
+          <a href="#" class="soc-btn">📸 Instagram</a>
+          <a href="#" class="soc-btn">👍 Facebook</a>
+          <a href="https://wa.me/919876543210" class="soc-btn">💬 WhatsApp</a>
+        </div>
+        <div class="map-box">
+          <div class="map-label">📍 Fun Loaded</div>
+          <p>Mission Street, White Town<br>Pondicherry 605001</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="contact-form-box">
+        <h3>SEND A<br>MESSAGE</h3>
+        <form onsubmit="handleContact(event)">
+          <div class="f-row">
+            <div class="f-group"><label>First Name</label><input type="text" placeholder="Rajesh" required></div>
+            <div class="f-group"><label>Last Name</label><input type="text" placeholder="Kumar"></div>
+          </div>
+          <div class="f-group"><label>Email</label><input type="email" placeholder="you@email.com" required></div>
+          <div class="f-group"><label>Phone</label><input type="tel" placeholder="+91 98765 43210"></div>
+          <div class="f-group">
+            <label>Interested In</label>
+            <select>
+              <option>Helmets</option>
+              <option>Riding Jackets</option>
+              <option>Gloves & Guards</option>
+              <option>Bike Accessories</option>
+              <option>Custom Fitments</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="f-group"><label>Message</label><textarea placeholder="Tell us what you're looking for, your bike model, size preferences..."></textarea></div>
+          <button type="submit" class="btn-pink">Send Message 🚀</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER (shown on all pages) -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#" onclick="goPage('home')" style="display:block;margin-bottom:1rem">
+        <span style="color:var(--A1)">Fun</span> Loaded
+      </a>
+      <p>Pondicherry's premier motorcycle gear destination. Helmets, jackets, gloves and fitments — curated for the passionate rider.</p>
+      <div class="footer-socials">
+        <a href="#" class="f-soc"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" class="f-soc"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="https://wa.me/919876543210" class="f-soc"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#" onclick="goPage('shop')">→ All Products</a></li>
+        <li><a href="#" onclick="goPage('shop')">→ Helmets</a></li>
+        <li><a href="#" onclick="goPage('shop')">→ Jackets</a></li>
+        <li><a href="#" onclick="goPage('shop')">→ Gloves</a></li>
+        <li><a href="#" onclick="goPage('shop')">→ Accessories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#" onclick="goPage('about')">→ About Us</a></li>
+        <li><a href="#">→ Size Guide</a></li>
+        <li><a href="#">→ Returns Policy</a></li>
+        <li><a href="#">→ Warranty</a></li>
+        <li><a href="#" onclick="goPage('contact')">→ Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Visit Us</h4>
+      <ul>
+        <li><a href="#">📍 Mission St, Pondicherry</a></li>
+        <li><a href="tel:+919876543210">📞 +91 98765 43210</a></li>
+        <li><a href="mailto:hello@funloaded.in">✉️ hello@funloaded.in</a></li>
+        <li><a href="#">🕙 Mon–Sat 10AM–8PM</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 <span>Fun Loaded</span> · Pondicherry ·  All rights reserved. Designed by <a class="footer-credit-link" href="https://www.techgajana.org" target="_blank">TechGajana Pvt. Ltd.</a></p>
+    <div class="pay-tags">
+      <span class="pay-tag">UPI</span>
+      <span class="pay-tag">VISA</span>
+      <span class="pay-tag">MASTERCARD</span>
+      <span class="pay-tag">CASH</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-backdrop" id="cart-backdrop" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-head">
+    <h3>🛒 YOUR CART</h3>
+    <button class="cart-x" onclick="closeCart()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="cart-items-wrap" id="cart-items-wrap"></div>
+  <div id="cart-foot-wrap"></div>
+</div>
+
+<!-- SEARCH PANEL -->
+<div class="search-panel" id="search-panel">
+  <div class="search-inner">
+    <div class="search-label-txt">Search Products</div>
+    <div class="search-input-wrap">
+      <input type="text" id="search-input" placeholder="HELMET, JACKET..." oninput="liveSearch(this.value)">
+      <button class="search-close-btn" onclick="closeSearch()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="search-tags-row">
+      <button class="s-tag" onclick="quickSearch('Helmet')">🪖 Helmets</button>
+      <button class="s-tag" onclick="quickSearch('Jacket')">🧥 Jackets</button>
+      <button class="s-tag" onclick="quickSearch('Gloves')">🧤 Gloves</button>
+      <button class="s-tag" onclick="quickSearch('Boot')">🥾 Boots</button>
+      <button class="s-tag" onclick="quickSearch('LED')">💡 Lights</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-box" id="toast-box">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Added to cart!</span>
+</div>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/919876543210" class="wa-float" title="Chat on WhatsApp" target="_blank">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+/* ── DATA ── */
+const products = [
+  {id:1,name:'Steelbird SBH-40 Full Face',brand:'Steelbird',cat:'helmets',price:3499,old:4499,badge:'sale',img:'https://i.pinimg.com/1200x/08/31/27/083127e30185a39bfc2b9b2f75f9d636.jpg',rating:5,reviews:128},
+  {id:2,name:'Vega Crux DX Open Face',brand:'Vega',cat:'helmets',price:1899,old:null,badge:'new',img:'https://i.pinimg.com/1200x/0c/78/c8/0c78c84af2782ae4f93058ac6f46ef8d.jpg',rating:4,reviews:87},
+  {id:3,name:'LS2 FF800 Storm Racing',brand:'LS2',cat:'helmets',price:12999,old:15000,badge:'sale',img:'https://i.pinimg.com/736x/f1/97/e8/f197e840988a30ed8bdf0c7183fe60c9.jpg',rating:5,reviews:214},
+  {id:4,name:'Rynox Raptor Pro Jacket',brand:'Rynox',cat:'jackets',price:7999,old:9500,badge:'sale',img:'https://i.pinimg.com/1200x/b1/4d/b4/b14db4d7dd248d1cf8d026e449baebaf.jpg',rating:5,reviews:96},
+  {id:5,name:'RE Thoroughbred Jacket',brand:'Royal Enfield',cat:'jackets',price:9499,old:null,badge:'new',img:'https://i.pinimg.com/1200x/a9/80/65/a98065ede245f24a32a8be4ed2674d68.jpg',rating:4,reviews:63},
+  {id:6,name:'Cramster Echo Mesh Jacket',brand:'Cramster',cat:'jackets',price:4299,old:5000,badge:'sale',img:'https://i.pinimg.com/1200x/01/22/07/012207a1422854887d85cf5ec5e5ebee.jpg',rating:4,reviews:44},
+  {id:7,name:'Alpinestars SPX Air Gloves',brand:'Alpinestars',cat:'gloves',price:3299,old:null,badge:'new',img:'https://i.pinimg.com/1200x/4d/f7/0a/4df70ac912df17922393f2b2400f400a.jpg',rating:4,reviews:55},
+  {id:8,name:'Wunderlich Short Gloves',brand:'Wunderlich',cat:'gloves',price:1599,old:1999,badge:'sale',img:'https://i.pinimg.com/736x/f1/04/2e/f1042ef3647cb6088f50271edc37d002.jpg',rating:4,reviews:32},
+  {id:9,name:'USB Handlebar Dual Charger',brand:'Xmoto',cat:'accessories',price:699,old:null,badge:'new',img:'https://i.pinimg.com/736x/b1/a9/98/b1a998dc30be2e5a30b5a812f4f3d1fe.jpg',rating:4,reviews:78},
+  {id:10,name:'Chrome Bar End Mirrors',brand:'Xmoto',cat:'accessories',price:899,old:1100,badge:'sale',img:'https://i.pinimg.com/1200x/6b/b2/7b/6bb27bb3379bd1c290162744dadfc1c8.jpg',rating:3,reviews:41},
+  {id:11,name:'Rynox CE2 Knee Guards',brand:'Rynox',cat:'accessories',price:2499,old:null,badge:'new',img:'https://i.pinimg.com/736x/98/5f/27/985f276a3c102c2b27a1cb13e4c67012.jpg',rating:5,reviews:112},
+  {id:12,name:'MT Revenge 2 Full Face',brand:'MT Helmets',cat:'helmets',price:6499,old:7500,badge:'hot',img:'https://i.pinimg.com/736x/5a/28/30/5a2830f74533579c4e3b1416855baba3.jpg',rating:4,reviews:89},
+];
+
+/* ── THEMES PER PAGE ── */
+const themes = {
+  home:  {bg:'#FFF5E1',A1:'#FF4D00',A2:'#FFC700',TX:'#1A0A00'},
+  shop:  {bg:'#E8F4FF',A1:'#0057FF',A2:'#00D4FF',TX:'#000C2E'},
+  about: {bg:'#F0FFE8',A1:'#00A550',A2:'#AAFF00',TX:'#001A0A'},
+  contact:{bg:'#FFF0F8',A1:'#E0007A',A2:'#FF6EC7',TX:'#1A0010'},
+};
+
+function applyTheme(p){
+  const t = themes[p];
+  const r = document.documentElement.style;
+  r.setProperty('--bg',t.bg);
+  r.setProperty('--A1',t.A1);
+  r.setProperty('--A2',t.A2);
+  r.setProperty('--TX',t.TX);
+  document.getElementById('cursor').style.background = t.A1;
+  document.getElementById('cursor-trail').style.borderColor = t.A1;
+  document.getElementById('cart-drawer').style.setProperty('--A1',t.A1);
+}
+
+/* ── PAGE NAVIGATION ── */
+let curPage = 'home';
+function goPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+  const nl = document.getElementById('nl-'+p);
+  if(nl) nl.classList.add('active');
+  curPage = p;
+  applyTheme(p);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='shop') renderShopGrid(products);
+  setTimeout(initReveal,100);
+}
+
+/* ── PRODUCT CARD HTML ── */
+function productCard(p, accent){
+  const col = accent||'var(--A1)';
+  const stars = '★'.repeat(p.rating)+'☆'.repeat(5-p.rating);
+  const badge = p.badge ? `<span class="p-badge ${p.badge}">${{new:'NEW',sale:'SALE',hot:'🔥 HOT'}[p.badge]}</span>`:'';
+  return `<div class="p-card" data-cat="${p.cat}">
+    <div class="p-card-img">
+      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      ${badge}
+      <div class="p-actions-hover">
+        <button class="p-act-btn" title="Wishlist"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg></button>
+        <button class="p-act-btn" title="Quick view"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div class="p-card-body">
+      <div class="p-brand">${p.brand}</div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-stars"><span>${stars}</span><span class="cnt">(${p.reviews})</span></div>
+      <div class="p-footer">
+        <div class="p-price">₹${p.price.toLocaleString('en-IN')}${p.old?`<span class="old">₹${p.old.toLocaleString('en-IN')}</span>`:''}</div>
+        <button class="p-add" onclick="addToCart(${p.id})" style="background:${col}" title="Add to cart"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── HOME GRID ── */
+let homeFilter = 'all';
+function renderHomeGrid(){
+  const list = homeFilter==='all' ? products.slice(0,8) : products.filter(p=>p.cat===homeFilter).slice(0,8);
+  document.getElementById('home-prod-grid').innerHTML = list.map(p=>productCard(p,'#FF4D00')).join('');
+}
+function filterHome(btn,cat){
+  document.querySelectorAll('.prod-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  homeFilter = cat;
+  renderHomeGrid();
+}
+
+/* ── SHOP GRID ── */
+let shopCat='all', shopSortVal='def';
+function renderShopGrid(list){
+  const el = document.getElementById('shop-grid');
+  const cnt = document.getElementById('shop-count');
+  if(!el)return;
+  if(cnt) cnt.textContent = `Showing ${list.length} products`;
+  el.innerHTML = list.length ? list.map(p=>productCard(p,'#0057FF')).join('') : `<div style="grid-column:1/-1;padding:3rem;text-align:center;color:#888;font-weight:700">No products found.</div>`;
+}
+function shopFilter(btn,cat){
+  document.querySelectorAll('.s-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  shopCat = cat;
+  applyShopFilters();
+}
+function shopSort(v){ shopSortVal=v; applyShopFilters(); }
+function applyShopFilters(){
+  let list = shopCat==='all' ? [...products] : products.filter(p=>p.cat===shopCat);
+  if(shopSortVal==='plo') list.sort((a,b)=>a.price-b.price);
+  else if(shopSortVal==='phi') list.sort((a,b)=>b.price-a.price);
+  else if(shopSortVal==='az') list.sort((a,b)=>a.name.localeCompare(b.name));
+  renderShopGrid(list);
+}
+
+/* ── CART ── */
+let cart = [];
+function addToCart(id){
+  const p = products.find(x=>x.id===id);
+  const ex = cart.find(x=>x.id===id);
+  if(ex) ex.qty++;
+  else cart.push({...p,qty:1});
+  renderCart();
+  toast('✅',`${p.name.split(' ').slice(0,3).join(' ')} added!`);
+}
+function changeQty(id,d){
+  const i = cart.findIndex(x=>x.id===id);
+  if(i<0) return;
+  cart[i].qty += d;
+  if(cart[i].qty<=0) cart.splice(i,1);
+  renderCart();
+}
+function renderCart(){
+  const badge = document.getElementById('cart-badge');
+  const wrap = document.getElementById('cart-items-wrap');
+  const foot = document.getElementById('cart-foot-wrap');
+  const total = cart.reduce((s,x)=>s+x.qty,0);
+  badge.textContent = total;
+  if(!cart.length){
+    wrap.innerHTML=`<div class="cart-empty"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>Your cart is empty 🏍️</p></div>`;
+    foot.innerHTML='';
+    return;
+  }
+  wrap.innerHTML = cart.map(x=>`
+    <div class="cart-item-row">
+      <img class="c-item-img" src="${x.img}" alt="${x.name}">
+      <div class="c-item-info">
+        <div class="c-item-name">${x.name}</div>
+        <div class="c-item-price">₹${(x.price*x.qty).toLocaleString('en-IN')}</div>
+        <div class="c-qty">
+          <button class="c-qty-btn" onclick="changeQty(${x.id},-1)">−</button>
+          <span class="c-qty-val">${x.qty}</span>
+          <button class="c-qty-btn" onclick="changeQty(${x.id},1)">+</button>
+        </div>
+      </div>
+    </div>`).join('');
+  const sum = cart.reduce((s,x)=>s+x.price*x.qty,0);
+  foot.innerHTML=`<div class="cart-foot">
+    <div class="cart-total-row"><span class="ct-label">Total</span><span class="ct-val">₹${sum.toLocaleString('en-IN')}</span></div>
+    <button class="checkout-btn" onclick="toast('🎉','Checkout coming soon! Call +91 98765 43210')">Proceed to Checkout →</button>
+  </div>`;
+}
+function openCart(){ document.getElementById('cart-drawer').classList.add('show'); document.getElementById('cart-backdrop').classList.add('show'); }
+function closeCart(){ document.getElementById('cart-drawer').classList.remove('show'); document.getElementById('cart-backdrop').classList.remove('show'); }
+
+/* ── SEARCH ── */
+function openSearch(){
+  document.getElementById('search-panel').classList.add('show');
+  setTimeout(()=>document.getElementById('search-input').focus(),150);
+}
+function closeSearch(){ document.getElementById('search-panel').classList.remove('show'); }
+function liveSearch(q){
+  if(!q.trim()) return;
+  const r = products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||p.brand.toLowerCase().includes(q.toLowerCase())||p.cat.toLowerCase().includes(q.toLowerCase()));
+  goPage('shop');
+  setTimeout(()=>renderShopGrid(r),50);
+  closeSearch();
+}
+function quickSearch(q){ document.getElementById('search-input').value=q; liveSearch(q); }
+
+/* ── TOAST ── */
+let toastTimer;
+function toast(icon,msg){
+  const b=document.getElementById('toast-box');
+  document.getElementById('toast-icon').textContent=icon;
+  document.getElementById('toast-msg').textContent=msg;
+  b.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>b.classList.remove('show'),3200);
+}
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>60);
+});
+
+/* ── HAMBURGER ── */
+function toggleMobileMenu(){
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+/* ── CURSOR ── */
+const CUR = document.getElementById('cursor');
+const RING = document.getElementById('cursor-trail');
+document.addEventListener('mousemove',e=>{
+  CUR.style.left=e.clientX+'px'; CUR.style.top=e.clientY+'px';
+  setTimeout(()=>{ RING.style.left=e.clientX+'px'; RING.style.top=e.clientY+'px'; },60);
+});
+document.querySelectorAll('a,button,.p-card,.cat-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-grow'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-grow'));
+});
+
+/* ── REVEAL ── */
+function initReveal(){
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('up'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>{ el.classList.remove('up'); io.observe(el); });
+}
+
+/* ── FORMS ── */
+function handleNL(e){ e.preventDefault(); toast('🎉','Welcome to the Pack! Check your inbox.'); e.target.reset(); }
+function handleContact(e){ e.preventDefault(); toast('✅','Message sent! We\'ll reply within 24 hours.'); e.target.reset(); }
+
+/* ── INIT ── */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('loader').classList.add('hide');
+    renderHomeGrid();
+    renderShopGrid(products);
+    renderCart();
+    applyTheme('home');
+    initReveal();
+  },2000);
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeSearch(); closeCart(); }
+});
+</script>
+</body>
+</html>
