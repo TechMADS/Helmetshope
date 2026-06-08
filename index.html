@@ -493,7 +493,10 @@ footer{background:#0D0D0D;color:#fff;padding:5rem 5vw 2.5rem}
   .shop-toolbar{flex-direction:column;align-items:flex-start}
 }
 @media(max-width:480px){
-  .prod-grid,.shop-grid{grid-template-columns:1fr 1fr}
+  .prod-grid,.shop-grid{grid-template-columns:1fr}
+  .p-footer{flex-wrap:wrap;gap:.75rem}
+  .p-price{white-space:nowrap;flex:1 1 auto}
+  .p-add{min-width:42px;min-height:42px}
 }
 </style>
 </head>
@@ -1111,7 +1114,7 @@ function productCard(p, accent){
       <div class="p-stars"><span>${stars}</span><span class="cnt">(${p.reviews})</span></div>
       <div class="p-footer">
         <div class="p-price">₹${p.price.toLocaleString('en-IN')}${p.old?`<span class="old">₹${p.old.toLocaleString('en-IN')}</span>`:''}</div>
-        <button class="p-add" onclick="addToCart(${p.id})" style="background:${col}" title="Add to cart"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <button class="p-add" onclick="addToCart(${p.id})" style="background:${col}" title="Add to cart"><svg viewBox="0 0 24 24" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
       </div>
     </div>
   </div>`;
